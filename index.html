@@ -2,189 +2,664 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Word Scramble Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ultimate All-in-One ToolBox</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #282c34;
-      color: #eee;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f4f4f4;
+      color: #222;
+      transition: background 0.3s, color 0.3s;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+    header, footer {
+      text-align: center;
+      padding: 1rem;
+      background: #333;
+      color: #fff;
+      width: 100%;
+    }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
+      gap: 8px;
+      margin: 1rem;
+      max-width: 960px;
+      width: 100%;
     }
-    #game {
-      background: #444;
-      padding: 20px 30px;
-      border-radius: 15px;
-      text-align: center;
-      width: 320px;
-      box-shadow: 0 0 10px #000;
-    }
-    h1 {
-      margin-bottom: 10px;
-    }
-    #scrambledWord {
-      font-size: 2em;
-      margin: 20px 0;
-      letter-spacing: 0.15em;
-      font-weight: bold;
-    }
-    input[type="text"] {
-      padding: 10px;
-      font-size: 1.2em;
-      width: 80%;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    button {
-      padding: 10px 18px;
-      font-size: 1em;
-      border-radius: 8px;
+    nav button {
+      padding: 10px 15px;
       border: none;
       cursor: pointer;
-      background: #61dafb;
-      color: #282c34;
-      transition: background-color 0.3s ease;
+      border-radius: 5px;
+      background: #007bff;
+      color: white;
+      flex: 1 1 120px;
+      min-width: 120px;
+      transition: background 0.3s;
     }
-    button:hover {
-      background: #21a1f1;
+    nav button:hover {
+      background: #0056b3;
     }
-    #message {
-      margin: 15px 0;
-      font-weight: bold;
-      min-height: 24px;
+    section {
+      display: none;
+      padding: 1rem;
+      max-width: 600px;
+      width: 95%;
+      margin: auto 0 2rem;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ccc;
+      flex-grow: 1;
     }
-    #scoreboard {
-      margin-top: 15px;
-      font-size: 1.1em;
+    section.active {
+      display: block;
     }
-    #timer {
+    textarea, input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0 15px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    .result {
       margin-top: 10px;
-      font-size: 1.1em;
-      color: #ffa500;
+      padding: 10px;
+      background: #eef;
+      border-radius: 5px;
+      min-height: 40px;
+      white-space: pre-wrap;
+    }
+    .dark-mode {
+      background: #222;
+      color: #eee;
+    }
+    .dark-mode section {
+      background: #333;
+      color: #eee;
+      box-shadow: 0 0 10px #555;
+    }
+    .dark-mode nav button {
+      background: #444;
+    }
+    .dark-mode nav button:hover {
+      background: #666;
+    }
+    .ads {
+      background: #ddd;
+      text-align: center;
+      padding: 10px;
+      margin: 20px auto;
+      max-width: 600px;
+      border-radius: 8px;
+      color: #555;
+      font-style: italic;
+    }
+    button.tool-action {
+      margin-right: 8px;
+      margin-bottom: 8px;
+      background: #28a745;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s;
+    }
+    button.tool-action:hover {
+      background: #1e7e34;
+    }
+    #quoteText {
+      font-style: italic;
+      font-size: 1.1rem;
+      text-align: center;
+      margin-top: 10px;
+    }
+    #telegramShare {
+      background: #0088cc;
+      color: white;
+      padding: 10px 20px;
+      font-weight: bold;
+      border-radius: 25px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+    #telegramShare:hover {
+      background: #006699;
+    }
+    @media (max-width: 600px) {
+      nav button {
+        flex: 1 1 45%;
+        min-width: auto;
+      }
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>Ultimate All-in-One ToolBox</h1>
+    <button onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
+  </header>
 
-<div id="game">
-  <h1>Word Scramble</h1>
-  <div id="scrambledWord">...</div>
-  <input id="guessInput" type="text" autocomplete="off" placeholder="Type your guess" />
-  <br />
-  <button id="submitBtn">Submit</button>
-  <button id="restartBtn" style="display:none;">Restart</button>
-  <div id="message"></div>
-  <div id="scoreboard">Score: 0</div>
-  <div id="timer">Time Left: 60s</div>
-</div>
+  <nav>
+    <!-- Original 6 tools -->
+    <button onclick="showTool('textCase')">Text Case</button>
+    <button onclick="showTool('wordCounter')">Word Counter</button>
+    <button onclick="showTool('qrCode')">QR Generator</button>
+    <button onclick="showTool('youtubeThumb')">YouTube Thumbnail</button>
+    <button onclick="showTool('currency')">Currency Convert</button>
+    <button onclick="showTool('bmi')">BMI Calc</button>
+    <!-- New 10 tools -->
+    <button onclick="showTool('numToWords')">Number to Words</button>
+    <button onclick="showTool('ageCalc')">Age Calculator</button>
+    <button onclick="showTool('countdown')">Countdown Timer</button>
+    <button onclick="showTool('passwordGen')">Password Generator</button>
+    <button onclick="showTool('quoteGen')">Random Quote</button>
+    <button onclick="showTool('base64')">Base64 Encoder/Decoder</button>
+    <button onclick="showTool('calculator')">Calculator</button>
+    <button onclick="showTool('dateDiff')">Date Difference</button>
+    <button onclick="showTool('ipChecker')">IP Address</button>
+    <button onclick="showTool('textToSpeech')">Text to Speech</button>
+    <!-- New Video Downloader -->
+    <button onclick="showTool('videoDownload')">Video Downloader</button>
+  </nav>
 
-<script>
-  const words = [
-    'javascript', 'puzzle', 'computer', 'function', 'variable',
-    'object', 'array', 'string', 'boolean', 'internet',
-    'algorithm', 'software', 'hardware', 'developer', 'coding',
-    'browser', 'console', 'debug', 'element', 'document'
-  ];
+  <a id="telegramShare" href="#" target="_blank" title="Share on Telegram" onclick="shareTelegram()">
+    📲 Share on Telegram
+  </a>
 
-  const scrambledWordEl = document.getElementById('scrambledWord');
-  const guessInput = document.getElementById('guessInput');
-  const submitBtn = document.getElementById('submitBtn');
-  const restartBtn = document.getElementById('restartBtn');
-  const messageEl = document.getElementById('message');
-  const scoreboard = document.getElementById('scoreboard');
-  const timerEl = document.getElementById('timer');
+  <div class="ads">[Google AdSense Ad Placeholder]</div>
 
-  let currentWord = '';
-  let scrambled = '';
-  let score = 0;
-  let timeLeft = 60;
-  let timerId = null;
+  <!-- Tools sections -->
 
-  function scramble(word) {
-    let arr = word.split('');
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+  <!-- 1. Text Case -->
+  <section id="textCase">
+    <h2>Text Case Converter</h2>
+    <textarea id="textInput" rows="5" placeholder="Enter your text here..."></textarea>
+    <div>
+      <button class="tool-action" onclick="convertCase('upper')">UPPERCASE</button>
+      <button class="tool-action" onclick="convertCase('lower')">lowercase</button>
+      <button class="tool-action" onclick="convertCase('capital')">Capital Case</button>
+    </div>
+  </section>
+
+  <!-- 2. Word Counter -->
+  <section id="wordCounter">
+    <h2>Word Counter</h2>
+    <textarea id="wordInput" rows="5" placeholder="Enter text..."></textarea>
+    <div class="result" id="wordResult">Words: 0 | Characters: 0</div>
+  </section>
+
+  <!-- 3. QR Code -->
+  <section id="qrCode">
+    <h2>QR Code Generator</h2>
+    <input type="text" id="qrInput" placeholder="Enter text or URL" />
+    <button class="tool-action" onclick="generateQR()">Generate QR</button>
+    <div id="qrOutput"></div>
+  </section>
+
+  <!-- 4. YouTube Thumbnail -->
+  <section id="youtubeThumb">
+    <h2>YouTube Thumbnail Downloader</h2>
+    <input type="text" id="ytInput" placeholder="Enter YouTube URL" />
+    <button class="tool-action" onclick="generateYTThumb()">Get Thumbnail</button>
+    <div id="ytOutput"></div>
+  </section>
+
+  <!-- 5. Currency Converter -->
+  <section id="currency">
+    <h2>Currency Converter (Fixed Rates)</h2>
+    <input type="number" id="usd" placeholder="USD Amount" min="0" />
+    <select id="currencyType">
+      <option value="120">INR</option>
+      <option value="0.85">EUR</option>
+      <option value="0.75">GBP</option>
+      <option value="1.25">AUD</option>
+      <option value="1.39">CAD</option>
+    </select>
+    <button class="tool-action" onclick="convertCurrency()">Convert</button>
+    <div id="currencyResult"></div>
+  </section>
+
+  <!-- 6. BMI Calculator -->
+  <section id="bmi">
+    <h2>BMI Calculator</h2>
+    <input type="number" id="bmiWeight" placeholder="Weight (kg)" min="0" />
+    <input type="number" id="bmiHeight" placeholder="Height (cm)" min="0" />
+    <button class="tool-action" onclick="calcBMI()">Calculate</button>
+    <div id="bmiResult"></div>
+  </section>
+
+  <!-- 7. Number to Words -->
+  <section id="numToWords">
+    <h2>Number to Words</h2>
+    <input type="number" id="numberInput" placeholder="Enter a number" />
+    <button class="tool-action" onclick="numberToWords()">Convert</button>
+    <div class="result" id="numWordsResult"></div>
+  </section>
+
+  <!-- 8. Age Calculator -->
+  <section id="ageCalc">
+    <h2>Age Calculator</h2>
+    <label>Enter your birthdate:</label>
+    <input type="date" id="birthdate" max="" />
+    <button class="tool-action" onclick="calculateAge()">Calculate Age</button>
+    <div class="result" id="ageResult"></div>
+  </section>
+
+  <!-- 9. Countdown Timer -->
+  <section id="countdown">
+    <h2>Countdown Timer</h2>
+    <input type="number" id="countdownSeconds" placeholder="Seconds" min="1" />
+    <button class="tool-action" onclick="startCountdown()">Start</button>
+    <div class="result" id="countdownResult"></div>
+  </section>
+
+  <!-- 10. Password Generator -->
+  <section id="passwordGen">
+    <h2>Password Generator</h2>
+    <label>
+      Length:
+      <input type="number" id="passwordLength" value="12" min="4" max="64" />
+    </label>
+    <br />
+    <label><input type="checkbox" id="includeLower" checked /> Include Lowercase</label>
+    <label><input type="checkbox" id="includeUpper" checked /> Include Uppercase</label>
+    <label><input type="checkbox" id="includeNumbers" checked /> Include Numbers</label>
+    <label><input type="checkbox" id="includeSymbols" /> Include Symbols</label>
+    <br />
+    <button class="tool-action" onclick="generatePassword()">Generate</button>
+    <div class="result" id="passwordResult"></div>
+  </section>
+
+  <!-- 11. Random Quote Generator -->
+  <section id="quoteGen">
+    <h2>Random Quote Generator</h2>
+    <button class="tool-action" onclick="generateQuote()">Get Quote</button>
+    <div id="quoteText">Click the button to get an inspirational quote.</div>
+  </section>
+
+  <!-- 12. Base64 Encoder/Decoder -->
+  <section id="base64">
+    <h2>Base64 Encoder / Decoder</h2>
+    <textarea id="base64Input" rows="4" placeholder="Enter text to encode or decode"></textarea>
+    <button class="tool-action" onclick="encodeBase64()">Encode</button>
+    <button class="tool-action" onclick="decodeBase64()">Decode</button>
+    <div class="result" id="base64Result"></div>
+  </section>
+
+  <!-- 13. Simple Calculator -->
+  <section id="calculator">
+    <h2>Simple Calculator</h2>
+    <input type="text" id="calcInput" placeholder="Enter expression (e.g. 2+3*4)" />
+    <button class="tool-action" onclick="calculateExpression()">Calculate</button>
+    <div class="result" id="calcResult"></div>
+  </section>
+
+  <!-- 14. Date Difference Tool -->
+  <section id="dateDiff">
+    <h2>Date Difference Calculator</h2>
+    <label>From: <input type="date" id="date1" /></label>
+    <label>To: <input type="date" id="date2" /></label>
+    <button class="tool-action" onclick="dateDifference()">Calculate Difference</button>
+    <div class="result" id="dateDiffResult"></div>
+  </section>
+
+  <!-- 15. IP Address Checker -->
+  <section id="ipChecker">
+    <h2>Your IP Address</h2>
+    <button class="tool-action" onclick="fetchIP()">Get My IP</button>
+    <div class="result" id="ipResult"></div>
+  </section>
+
+  <!-- 16. Text to Speech -->
+  <section id="textToSpeech">
+    <h2>Text to Speech</h2>
+    <textarea id="ttsInput" rows="4" placeholder="Enter text to read aloud"></textarea>
+    <button class="tool-action" onclick="speakText()">Speak</button>
+  </section>
+
+  <!-- 17. Video Downloader (TikTok no watermark) -->
+  <section id="videoDownload">
+    <h2>Video Downloader (TikTok no watermark)</h2>
+    <input type="text" id="videoUrl" placeholder="Paste TikTok video URL here" />
+    <button class="tool-action" onclick="downloadTikTok()">Download Video</button>
+    <div id="videoDownloadResult"></div>
+  </section>
+
+  <footer>© 2025 Ultimate All-in-One Toolbox | Built to Earn</footer>
+
+  <script>
+    // Navigation
+    function showTool(id) {
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
-    return arr.join('');
-  }
 
-  function newWord() {
-    currentWord = words[Math.floor(Math.random() * words.length)];
-    scrambled = scramble(currentWord);
-    // Ensure scrambled word is different from original
-    while (scrambled === currentWord) {
-      scrambled = scramble(currentWord);
+    // Dark mode toggle
+    function toggleDarkMode() {
+      document.body.classList.toggle('dark-mode');
     }
-    scrambledWordEl.textContent = scrambled.toUpperCase();
-  }
 
-  function startGame() {
-    score = 0;
-    timeLeft = 60;
-    scoreboard.textContent = 'Score: 0';
-    timerEl.textContent = `Time Left: ${timeLeft}s`;
-    messageEl.textContent = '';
-    guessInput.value = '';
-    guessInput.disabled = false;
-    submitBtn.style.display = 'inline-block';
-    restartBtn.style.display = 'none';
-    newWord();
-    guessInput.focus();
+    // 1. Text Case Converter
+    function convertCase(type) {
+      const txt = document.getElementById("textInput").value;
+      let res = "";
+      if (type === 'upper') res = txt.toUpperCase();
+      else if (type === 'lower') res = txt.toLowerCase();
+      else res = txt.replace(/\w\S*/g, w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+      document.getElementById("textInput").value = res;
+    }
 
-    if (timerId) clearInterval(timerId);
-    timerId = setInterval(() => {
-      timeLeft--;
-      timerEl.textContent = `Time Left: ${timeLeft}s`;
-      if (timeLeft <= 0) {
-        endGame();
+    // 2. Word Counter
+    document.getElementById("wordInput").addEventListener("input", () => {
+      const txt = document.getElementById("wordInput").value;
+      const words = txt.trim().split(/\s+/).filter(Boolean).length;
+      const chars = txt.length;
+      document.getElementById("wordResult").innerText = `Words: ${words} | Characters: ${chars}`;
+    });
+
+    // 3. QR Code Generator
+    function generateQR() {
+      const data = document.getElementById("qrInput").value.trim();
+      if (!data) {
+        alert("Please enter some text or URL");
+        return;
       }
-    }, 1000);
-  }
-
-  function endGame() {
-    clearInterval(timerId);
-    messageEl.textContent = `⏰ Time's up! Final Score: ${score}`;
-    guessInput.disabled = true;
-    submitBtn.style.display = 'none';
-    restartBtn.style.display = 'inline-block';
-  }
-
-  submitBtn.addEventListener('click', () => {
-    const guess = guessInput.value.trim().toLowerCase();
-    if (!guess) return;
-    if (guess === currentWord) {
-      score++;
-      scoreboard.textContent = `Score: ${score}`;
-      messageEl.textContent = '🎉 Correct! Next word...';
-      guessInput.value = '';
-      newWord();
-    } else {
-      messageEl.textContent = '❌ Wrong! Try again.';
+      document.getElementById("qrOutput").innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(data)}" alt="QR Code" />`;
     }
-    guessInput.focus();
-  });
 
-  guessInput.addEventListener('keyup', e => {
-    if (e.key === 'Enter') {
-      submitBtn.click();
+    // 4. YouTube Thumbnail Downloader
+    function generateYTThumb() {
+      const url = document.getElementById("ytInput").value.trim();
+      const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})/);
+      const id = match ? match[1] : null;
+      if (id) {
+        document.getElementById("ytOutput").innerHTML = `<img src="https://img.youtube.com/vi/${id}/maxresdefault.jpg" alt="Thumbnail" style="width:100%; max-width:500px;"/>`;
+      } else {
+        document.getElementById("ytOutput").innerText = "Invalid YouTube URL";
+      }
     }
-  });
 
-  restartBtn.addEventListener('click', () => {
-    startGame();
-  });
+    // 5. Currency Converter
+    function convertCurrency() {
+      const usd = parseFloat(document.getElementById("usd").value);
+      const rate = parseFloat(document.getElementById("currencyType").value);
+      if (isNaN(usd) || usd < 0) {
+        alert("Enter a valid USD amount");
+        return;
+      }
+      const result = usd * rate;
+      const symbol = document.getElementById("currencyType").options[document.getElementById("currencyType").selectedIndex].text;
+      document.getElementById("currencyResult").innerText = `Converted: ${result.toFixed(2)} ${symbol}`;
+    }
 
-  // Start automatically on page load
-  startGame();
-</script>
+    // 6. BMI Calculator
+    function calcBMI() {
+      const w = parseFloat(document.getElementById("bmiWeight").value);
+      const h = parseFloat(document.getElementById("bmiHeight").value) / 100;
+      if (isNaN(w) || isNaN(h) || w <= 0 || h <= 0) {
+        alert("Please enter valid weight and height");
+        return;
+      }
+      const bmi = w / (h * h);
+      let msg = `Your BMI is ${bmi.toFixed(1)} – `;
+      if (bmi < 18.5) msg += "Underweight";
+      else if (bmi < 25) msg += "Normal";
+      else if (bmi < 30) msg += "Overweight";
+      else msg += "Obese";
+      document.getElementById("bmiResult").innerText = msg;
+    }
 
+    // 7. Number to Words
+    function numberToWords() {
+      const num = parseInt(document.getElementById("numberInput").value);
+      if (isNaN(num)) {
+        alert("Enter a valid number");
+        return;
+      }
+      const a = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+      const b = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+      function inWords(n) {
+        if (n < 20) return a[n];
+        if (n < 100) return b[Math.floor(n/10)] + (n%10 ? " " + a[n%10] : "");
+        if (n < 1000) return a[Math.floor(n/100)] + " Hundred" + (n%100 ? " " + inWords(n%100) : "");
+        if (n < 1_000_000) return inWords(Math.floor(n/1000)) + " Thousand" + (n%1000 ? " " + inWords(n%1000) : "");
+        if (n < 1_000_000_000) return inWords(Math.floor(n/1_000_000)) + " Million" + (n%1_000_000 ? " " + inWords(n%1_000_000) : "");
+        return inWords(Math.floor(n/1_000_000_000)) + " Billion" + (n%1_000_000_000 ? " " + inWords(n%1_000_000_000) : "");
+      }
+      document.getElementById("numWordsResult").innerText = inWords(num);
+    }
+
+    // 8. Age Calculator
+    function calculateAge() {
+      const bdate = document.getElementById("birthdate").value;
+      if (!bdate) {
+        alert("Select your birthdate");
+        return;
+      }
+      const birth = new Date(bdate);
+      const now = new Date();
+      if (birth > now) {
+        alert("Birthdate cannot be in the future");
+        return;
+      }
+      let years = now.getFullYear() - birth.getFullYear();
+      let months = now.getMonth() - birth.getMonth();
+      let days = now.getDate() - birth.getDate();
+      if (days < 0) {
+        months--;
+        days += new Date(now.getFullYear(), now.getMonth(), 0).getDate();
+      }
+      if (months < 0) {
+        years--;
+        months += 12;
+      }
+      document.getElementById("ageResult").innerText = `You are ${years} year(s), ${months} month(s), and ${days} day(s) old.`;
+    }
+    document.getElementById("birthdate").max = new Date().toISOString().split("T")[0];
+
+    // 9. Countdown Timer
+    let countdownInterval;
+    function startCountdown() {
+      clearInterval(countdownInterval);
+      const seconds = parseInt(document.getElementById("countdownSeconds").value);
+      if (isNaN(seconds) || seconds <= 0) {
+        alert("Enter a positive number of seconds");
+        return;
+      }
+      let remaining = seconds;
+      const display = document.getElementById("countdownResult");
+      display.textContent = formatTime(remaining);
+      countdownInterval = setInterval(() => {
+        remaining--;
+        if (remaining < 0) {
+          clearInterval(countdownInterval);
+          display.textContent = "Time's up!";
+          return;
+        }
+        display.textContent = formatTime(remaining);
+      }, 1000);
+    }
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${m.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`;
+    }
+
+    // 10. Password Generator
+    function generatePassword() {
+      const length = parseInt(document.getElementById("passwordLength").value);
+      const lower = document.getElementById("includeLower").checked;
+      const upper = document.getElementById("includeUpper").checked;
+      const numbers = document.getElementById("includeNumbers").checked;
+      const symbols = document.getElementById("includeSymbols").checked;
+      if (isNaN(length) || length < 4 || length > 64) {
+        alert("Password length must be between 4 and 64");
+        return;
+      }
+      let chars = "";
+      if (lower) chars += "abcdefghijklmnopqrstuvwxyz";
+      if (upper) chars += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      if (numbers) chars += "0123456789";
+      if (symbols) chars += "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+      if (!chars) {
+        alert("Select at least one character set");
+        return;
+      }
+      let password = "";
+      for(let i=0; i<length; i++) {
+        password += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById("passwordResult").innerText = password;
+    }
+
+    // 11. Random Quote Generator
+    const quotes = [
+      "The best way to get started is to quit talking and begin doing. – Walt Disney",
+      "Don’t let yesterday take up too much of today. – Will Rogers",
+      "It’s not whether you get knocked down, it’s whether you get up. – Vince Lombardi",
+      "If you are working on something exciting, it will keep you motivated. – Elon Musk",
+      "Success is not in what you have, but who you are. – Bo Bennett",
+      "Believe you can and you're halfway there. – Theodore Roosevelt",
+      "Your limitation—it’s only your imagination.",
+      "Push yourself, because no one else is going to do it for you.",
+      "Great things never come from comfort zones.",
+      "Dream it. Wish it. Do it."
+    ];
+    function generateQuote() {
+      const idx = Math.floor(Math.random() * quotes.length);
+      document.getElementById("quoteText").innerText = quotes[idx];
+    }
+
+    // 12. Base64 Encoder/Decoder
+    function encodeBase64() {
+      const input = document.getElementById("base64Input").value;
+      try {
+        const encoded = btoa(unescape(encodeURIComponent(input)));
+        document.getElementById("base64Result").innerText = encoded;
+      } catch (e) {
+        document.getElementById("base64Result").innerText = "Invalid input for encoding.";
+      }
+    }
+    function decodeBase64() {
+      const input = document.getElementById("base64Input").value;
+      try {
+        const decoded = decodeURIComponent(escape(atob(input)));
+        document.getElementById("base64Result").innerText = decoded;
+      } catch (e) {
+        document.getElementById("base64Result").innerText = "Invalid Base64 input.";
+      }
+    }
+
+    // 13. Simple Calculator
+    function calculateExpression() {
+      const expr = document.getElementById("calcInput").value;
+      try {
+        if(!/^[0-9+\-*/().\s]+$/.test(expr)) {
+          throw "Invalid characters in expression";
+        }
+        const result = Function('"use strict";return (' + expr + ')')();
+        document.getElementById("calcResult").innerText = `Result: ${result}`;
+      } catch (e) {
+        document.getElementById("calcResult").innerText = "Invalid expression";
+      }
+    }
+
+    // 14. Date Difference Tool
+    function dateDifference() {
+      const d1 = new Date(document.getElementById("date1").value);
+      const d2 = new Date(document.getElementById("date2").value);
+      if (isNaN(d1) || isNaN(d2)) {
+        alert("Please select both dates");
+        return;
+      }
+      let diffMs = Math.abs(d2 - d1);
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+      document.getElementById("dateDiffResult").innerText = `Difference: ${diffDays} day(s)`;
+    }
+
+    // 15. IP Address Checker
+    async function fetchIP() {
+      document.getElementById("ipResult").innerText = "Fetching IP...";
+      try {
+        const res = await fetch("https://api.ipify.org?format=json");
+        const data = await res.json();
+        document.getElementById("ipResult").innerText = `Your IP address is: ${data.ip}`;
+      } catch (e) {
+        document.getElementById("ipResult").innerText = "Unable to fetch IP address.";
+      }
+    }
+
+    // 16. Text to Speech
+    function speakText() {
+      const txt = document.getElementById("ttsInput").value.trim();
+      if (!txt) {
+        alert("Enter text to speak");
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(txt);
+      speechSynthesis.speak(utterance);
+    }
+
+    // 17. Video Downloader (TikTok no watermark)
+    async function downloadTikTok() {
+      const url = document.getElementById('videoUrl').value.trim();
+      const output = document.getElementById('videoDownloadResult');
+      if (!url) {
+        alert('Please enter a TikTok video URL');
+        return;
+      }
+      output.innerHTML = 'Fetching download link...';
+      const api = `https://api.tikmate.app/api/lookup?url=${encodeURIComponent(url)}`;
+      try {
+        const response = await fetch(api);
+        if (!response.ok) throw new Error('API error');
+        const data = await response.json();
+        if (data.status !== 'ok') {
+          output.innerHTML = 'Failed to get video info';
+          return;
+        }
+        const noWatermark = data.video.no_watermark || data.video.no_watermark_hd;
+        if (!noWatermark) {
+          output.innerHTML = 'No no-watermark video found';
+          return;
+        }
+        output.innerHTML = `
+          <a href="${noWatermark}" target="_blank" download>
+            ⬇️ Click here to download video (no watermark)
+          </a>
+          <br />
+          <video src="${noWatermark}" controls style="max-width: 100%; margin-top: 10px;"></video>
+        `;
+      } catch (e) {
+        output.innerHTML = 'Error fetching video info. Try again later.';
+      }
+    }
+
+    // Telegram share button
+    function shareTelegram() {
+      const url = encodeURIComponent(window.location.href);
+      const text = encodeURIComponent("Check out this Ultimate All-in-One Toolbox website! Tons of free online tools.");
+      const telegramUrl = `https://t.me/share/url?url=${url}&text=${text}`;
+      window.open(telegramUrl, "_blank");
+    }
+
+    // Show first tool by default
+    showTool('textCase');
+  </script>
 </body>
 </html>
